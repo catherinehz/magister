@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Повернутися на почтаток</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+</head>
+<body>
+<div id="wrapper">
+	<div id="inner-wrapper">
+		<header id="header">
+			<h1>Створення SCADA-системи за допомогою веб-технологій</h1>
+			<nav id="menu" class="default">
+				<ul>
+					<li><a href="#meta">Мета</a></li>
+					<li><a href="#parts">PHP середовище розробки</a></li>
+				    <li><a href="#scada">SCADA</a></li>
+				    <li><a href="#chart">SCADA and HMI Software Components</a></li>
+				</ul>
+			</nav>
+		</header>
+		
+		<div id="content">
+
+			      <section id="meta">
+			       <h2>Мета</h2>
+			       <p>Диспетчерське управління і збір даних (SCADA - Supervisory Control And Data Acquisition) є основним і в даний час залишається найбільш перспективним методом автоматизованого управління складними динамічними системами (процесами) в життєво важливих і критичних з точки зору безпеки і надійності областях. Саме на принципах диспетчерського управління будуються великі автоматизовані системи в промисловості.</p>
+			      </separator>
+        <div class="separator"></div>
+
+        <section id="parts">
+          <h2>PHP середовище розробки</h2>
+          <h3> Apache HTTP server</h3>
+            <p>Веб-сервер - сервер, що приймає HTTP-запити від клієнтів, зазвичай веб-браузерів, і видає їм HTTP-відповіді, як правило, разом з HTML-сторінкою, зображенням, файлом, медіа-потоком або іншими даними. Веб-сервером називають як програмне забезпечення, яке виконує функції веб-сервера, так і безпосередньо комп'ютер. Клієнт, яким зазвичай є веб-браузер, передає веб-серверу запити на отримання ресурсів, позначених URL-адресами. Ресурси - це HTML-сторінки, зображення, файли, медіа-потоки або інші дані, які необхідні клієнту. У відповідь веб-сервер передає клієнту запитані дані. Цей обмін відбувається по протоколу HTTP.</p>  
+
+            <h3>MySQL server</h3>
+            <p>Взаємодія з базою даних відбувається за допомогою Системи Управління Базою Даних (СУБД), яка розшифровує запити і здійснює операції з інформацією в базі даних. MySQL - це одна з найпопулярніших і найпоширеніших СУБД</p>
+
+            <h3>Механізм PHP</h3>
+            <p>PHP - скриптова мова загального призначення, інтенсивно застосовується для розробки веб-додатків.</p>
+      </section>
+      <div class="separator"></div>
+
+      	<section id="scada">  
+        <h2>SCADA</h2>
+         <p>Всі сучасні SCADA-системи включають три основних структурних компонента (див.Рис. ):</p>
+         <a href="#" class="image"><img src="images/pic01.png" width="700" height="250" text-align="center"/></a>
+         
+         <p><strong>Remote Terminal Unit (RTU)</strong> віддалений термінал, який здійснює обробку завдання (управління) в режимі реального часу. Спектр його втілень широкий від примітивних датчиків, які здійснюють знімання інформації з об'єкта, до спеціалізованих багатопроцесорних відмовостійких обчислювальних комплексів, які здійснюють обробку інформації і управління в режимі жорсткого реального часу. Конкретна його реалізація визначається конкретним застосуванням. Використання пристроїв низкоуровневой обробки інформації дозволяє знизити вимоги до пропускної здатності каналів зв'язку з центральним диспетчерським пунктом.</p>
+         
+         <p><strong>Master Terminal Unit (MTU)</strong>, Master Station (MS) диспетчерський пункт управління (головний термінал); здійснює обробку даних і управління високого рівня, як правило, в режимі м'якого (квазі-) реального часу; одна з основних функцій забезпечення інтерфейсу між людиною-оператором і системою (HMI, MMI). Залежно від конкретної системи MTU може бути реалізований в самому різноманітне вигляді від одиночного комп'ютера з додатковими пристроями підключення до каналів зв'язку до великих обчислювальних систем (мейнфреймів) і / або об'єднаних в локальну мережу робочих станцій і серверів. Як правило, і при побудові MTU використовуються різні методи підвищення надійності та безпеки роботи системи.</p>
+         
+         <p><strong>Communication System (CS)</strong> комунікаційна система (канали зв'язку), необхідна для передачі даних з віддалених точок (об'єктів, терміналів) на центральний інтерфейс оператора-диспетчера і передачі сигналів управління на RTU (або віддалений об'єкт в залежності від конкретного виконання системи).</p>
+
+         <h3>How Do SCADA Systems Work?</h3>
+
+			<p>SCADA systems deploy multiple software and hardware elements that allow industrial organizations to: 
+			<ul>
+			<li>Monitor, gather, and process data</li>
+			<li>Interact with and control machines and devices such as valves, pumps, motors, and more, which are connected through HMI (human-machine interface) software</li>
+			<li>Record events into a log file</li>
+			</ul>
+			<p>In basic SCADA architectures, information from sensors or manual inputs are sent to PLCs (programmable logic controllers) or RTUs (remote terminal units), which then send that information to computers with SCADA software. SCADA software analyzes and displays the data in order to help operators and other workers to reduce waste and improve efficiency in the manufacturing process.</p>
+			<a href="#" class="image"><img src="images/pic02.png" width="500" height="500" text-align="center"/></a>
+
+      	</section>
+      <div class="separator"></div>
+
+      
+
+      <section id="chart">
+      <h2>SCADA and HMI Software Components</h2>
+      </section>
+
+  </div>
+		<footer id="footer">Гуза Катерина - КПІ &copy 2016</footer>
+	</div>
+</div>
+</body>
+</html>
