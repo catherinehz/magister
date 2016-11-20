@@ -155,3 +155,6 @@ font-size: 32px;
     .transbg {
         background-color: rgba(60, 130, 190, 0.7)!important;
     }
+    .my-picture {
+        width:100%;
+    }

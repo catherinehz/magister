@@ -16,46 +16,17 @@
 
                 <div id="content">
                     <div>
-                        <img src="images/scruber_1.png" />
+                        <img src="images/scheme.png" alt="pic" class='my-picture' />
                     </div>
-                    <div>
-                        <button style="background:green;border:1px solid red;">START</button>
-                        <button style="background:red;border:1px solid red;">STOP</button>
-                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
                     <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
                 </div>
                 <footer id="footer">Гуза Катерина - КПІ &copy; 2016</footer>
             </div>
         </div>
+        <script type="text/javascript" src="js/chart-mock.js"></script>
     </body>
-
-
-    <script type="text/javascript">
-
-        window.onload = function () {
-            var chart = new CanvasJS.Chart("chartContainer", {
-                title: {
-                    text: "My First Chart in CanvasJS"
-                },
-                data: [
-                    {
-                        // Change type to "doughnut", "line", "splineArea", etc.
-                        type: "column",
-                        dataPoints: [
-                            {label: "apple", y: 10},
-                            {label: "orange", y: 15},
-                            {label: "banana", y: 25},
-                            {label: "mango", y: 30},
-                            {label: "grape", y: 28}
-                        ]
-                    }
-                ]
-            });
-            chart.render();
-        }
-    </script>
-
-
-
 </html>
