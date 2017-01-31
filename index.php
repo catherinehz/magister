@@ -50,13 +50,13 @@
                                 </p>
                                  <p> Концентрація CO<sub>2</sub> на виході:
                                   <output name="Значення"><b id="co2out"></b> <b>%</b></output>
-                                  <input name="Значення" placeholder="Specify your value (integer)" value="2%" />
+                                  <input name="Значення" placeholder="Specify your value"/>
                                 </p>
                                 
                             </form>
                                 
                                 
-                                  <em>Ступінь відкриття клапана</em>
+                                  <em>Ступінь відкриття клапана NaOH</em>
                                 <div class="progress">
                                 <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
                                    60%
