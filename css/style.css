@@ -80,7 +80,7 @@ a, a:hover {color: #FFF; text-decoration: none;}
 
 #footer {
 	background: #f0f0f0; 
-	height: 25px; 
+	height: 30px; 
 	color: #777; 
 	padding: 10px;
 	margin: 0px 0 10px 0;
@@ -89,6 +89,7 @@ a, a:hover {color: #FFF; text-decoration: none;}
 #chartContainer {
     
     position: absolute;
-    top:65%;
+    top:70%;
     margin: 0 2%; 
 }
+

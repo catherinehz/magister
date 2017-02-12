@@ -27,9 +27,11 @@
                     <div id="scrubber">
                     <img src="images/scrubber1.png" alt="scrubber" />
                     </div>
-
+                        
+                    
+                               
                     <div id="right-part">
-                        <img src="images/operator.png" alt="operator" />
+                        <img src="images/operator3.png" alt="operator" />
 
                             <div id="form">
                             <form>
@@ -50,15 +52,32 @@
                                 </p>
                                  <p> Концентрація CO<sub>2</sub> на виході:
                                   <output name="Значення"><b id="co2out"></b> <b>%</b></output>
-                                  <input name="Значення" placeholder="Specify your value"/>
+                                  <input name="Значення" placeholder="Цільове значення"/>
                                 </p>
                                 
                             </form>
                                 
                                 
                                   <em>Ступінь відкриття клапана NaOH</em>
+                                                                    
                                 <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                                    
+                                <div  id="pb1" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+                                   60%
+                                </div>
+                              </div>
+                                  
+                                 <em>Ступінь відкриття клапана C<sub>2</sub>H<sub>2</sub> та CO<sub>2</sub></em>
+                                <div class="progress">
+ 
+                                <div  id="pb2" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+                                   60%
+                                </div>
+                              </div>
+                                 
+                                 <em>Ступінь відкриття клапана шлам</em>
+                                <div class="progress">
+                                <div  id="pb3" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
                                    60%
                                 </div>
                               </div>
@@ -72,7 +91,9 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                       <li><a href="#">Графік зміни температури у скрубері</a></li>
+                                      <li><a href="#">Графік зміни витрати NaOH</a></li>
                                        <li><a href="#">Графік зміни концентрації CO<sub>2</sub> на виході</a></li>
+                                        <li><a href="#">Графік зміни витрати суміші C<sub>2</sub>H<sub>2</sub> та CO<sub>2</a></li>
                                          <li><a href="#">Графік температури з Arduino</a></li>
                                     </ul>
                                   </div>
@@ -81,6 +102,10 @@
                             </div>
                         
                     </div>
+                    
+                                    
+                    
+                                        
                     
                     <div id="chartContainer" style="height: 300px; width: 95%;"></div>
                     

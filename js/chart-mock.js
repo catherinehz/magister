@@ -17,11 +17,17 @@ function reloadData() {
     
     //console.log(getRandomInt(15,25),'C');
     $('#temp').text(getRandomInt(10,40));
-    $('#naohinp').text(getRandomInt(1, 3));
+    $('#naohinp').text(getRandomFloat(1, 3));
     $('#co2inp').text(getRandomInt(10,4));
-     $('#massinp').text(getRandomInt(1,5));
+     $('#massinp').text(getRandomFloat(1,5));
     $('#co2out').text(getRandomInt(4,1));
-    $('#shlam').text(getRandomInt(1,6));
+    $('#shlam').text(getRandomFloat(1,6));
+    var percent1 = getRandomInt(40,80);
+    var percent2 = getRandomInt(50,70);
+    var percent3 = getRandomInt(60,80);
+    $('#pb1').text(percent1+"%").css("width",percent1+"%");
+     $('#pb2').text(percent2+"%").css("width",percent2+"%");
+      $('#pb3').text(percent3+"%").css("width",percent3+"%");
 }
 
 /* --- Chart Mechanics --- */
@@ -115,4 +121,9 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomFloat(min, max) {
+    var res = (Math.random() * (max - min)) + min;
+    return res.toPrecision(3);
 }
