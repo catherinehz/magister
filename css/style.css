@@ -9,27 +9,69 @@ a, a:hover {color: #FFF; text-decoration: none;}
 	overflow: hidden;
 }
 
-#inner-wrapper {
-    width: 87.5%; 
-    margin: 0 auto;
-    background: linear-gradient(to top, #ffffff, #dcdfea);
-    padding: 0px 0px 10px 0px; 
-    
-}
 #header {
 	height: 50px;
 	/*background-color: #f28772; */
 	
 }
 
+
+#page {
+	width: 90%;
+	padding: 50px;
+	margin: -65px auto;
+    background: linear-gradient(to top, #ffffff, #dcdfea);
+    
+}
+
+h2 {
+	position: relative;
+	width: 110.3%;
+	left: -6%;
+	font-size: 1.5em;
+	font-weight: bold;
+	padding: 15px 20px 6px 70px;
+	margin: -35px 10px 10px 0px;
+	color: #555;
+	background-color: #999;
+	text-shadow: 0px 1px 2px #bbb;
+	-webkit-box-shadow: 0px 2px 4px #888;
+	-moz-box-shadow: 0px 2px 4px #888;
+	box-shadow: 0px 2px 4px #888;
+}
+
+h2:before {
+	content: ' ';
+	position: absolute;
+	width: 55px;
+	height: 0;
+	left: -2.5%;
+	top: 24px;
+	border-width: 20px 10px;
+	border-style: solid;
+	border-color: #999 #999 #999 transparent;
+}
+
+h2:after {
+	content: ' ';
+	position: absolute;
+	width: 0px;
+	height: 0;
+	left: 2px;
+	top: 100%;
+	border-width: 5px 10px;
+	border-style: solid;
+	border-color: #666 #666 transparent transparent;
+}
+
+
 #content {
 	min-height: 1000px;
 	 overflow: hidden; 
-	 padding: 10px auto; 
 	 color: #000; 
 	 position: relative;
-	 left: 10px;
-         margin: 40px auto;
+	 left: -2%;
+         margin: 50px auto;
 	 }
 
 #scrubber
@@ -43,32 +85,21 @@ a, a:hover {color: #FFF; text-decoration: none;}
 #scrubber img
 
 {
-	position: absolute; 
+	position: relative; 
 	left: 0%;
-
-
-
+        
 }
 
-#right-part {
-	width: 50%;
-	margin: 10px auto;
-	border: 2px white; 
-	position: absolute; 
-	left: 47%;
-	z-index: 1;
-
-
-}
 
 #form
 {
-    width:470px; 
-    margin:0 auto; 
-    position: absolute; 
-	top: 10%;
-	left: 3%;
-    z-index: 2;
+    width: 50%;
+    margin: -50% 24%;
+    position: relative; 
+    left: 25%;
+    padding: 4% 3%;
+    background: #dcdfea;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
    
 
 }
@@ -77,12 +108,29 @@ a, a:hover {color: #FFF; text-decoration: none;}
 	width: 100px;
      }
 
-
+     .right {
+         
+         position: relative;
+         left: 20%;
+         margin-bottom: 10%;
+         
+     }
+     
+      .left {
+         
+         position: relative;
+         left: 0%;
+         float: left;
+         margin-bottom: 5%;
+         
+     }
+     
+     
 #footer {
 	background: #f0f0f0; 
 	height: 30px; 
 	color: #777; 
-	padding: 10px;
+	padding: 30px;
 	margin: 0px 0 10px 0;
 }
 

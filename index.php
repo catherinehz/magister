@@ -14,10 +14,10 @@
         
         
         
-        <div id="wrapper">
+        <div id="page">
             <div id="inner-wrapper">
-                <header id="header">
-                    <img src="images/header.png" alt="header" />
+               <header id="header">
+                        <h2>WEB SCADA</h2>
                 </header>
 
 
@@ -31,16 +31,23 @@
                     
                                
                     <div id="right-part">
-                        <img src="images/operator3.png" alt="operator" />
-
                             <div id="form">
                             <form>
+                                 <div class="left">
                                 <p> Температура у скрубері:
                                     <output name="Значення"><b id="temp"></b> <b><sup>o</sup>C</b></output> 
                                 </p>
                                 <p> Витрата NaOH:
                                  <output name="temp"><b id="naohinp"></b> <b>кг/секундку</b></output>
                                 </p>
+                                
+                                <p> Концентрація CO<sub>2</sub> на виході:
+                                  <output name="Значення"><b id="co2out"></b> <b>%</b></output>
+                                  <input name="Значення" placeholder="Цільове значення"/>
+                                </p>
+                                </div>
+                                
+                                <div class="right">
                                 <p> Концентрація CO<sub>2</sub> на вході:
                                     <output name="Значення"><b id="co2inp"></b> <b>%</b></output>
                                 </p>
@@ -50,14 +57,12 @@
                                 <p> Витрата шламу:
                                     <output name="Значення"><b id="shlam"></b> <b>кг/секундку</b></output>
                                 </p>
-                                 <p> Концентрація CO<sub>2</sub> на виході:
-                                  <output name="Значення"><b id="co2out"></b> <b>%</b></output>
-                                  <input name="Значення" placeholder="Цільове значення"/>
-                                </p>
+                                </div>
+                                 
                                 
                             </form>
                                 
-                                
+                                <div class="stripe">
                                   <em>Ступінь відкриття клапана NaOH</em>
                                                                     
                                 <div class="progress">
@@ -82,7 +87,7 @@
                                 </div>
                               </div>
                             
-                              
+                              </div>
                                   
                                   <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -111,7 +116,7 @@
                     
                 </div>
 
-                <footer id="footer">Гуза Катерина - КПІ &copy; 2017</footer>
+                
             </div>
         </div>
        
