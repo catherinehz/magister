@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'blog_index' %}
+
+{% block main %}
+    {% for device in devices %}
+        <article class="post">
+            <h2>
+                <a href="{{ path('device_page', { id: device.id }) }}">
+                    {{ device.title }}
+                </a>
+            </h2>
+
+            <p class="post-metadata">
+                <span class="metadata"><i class="fa fa-calendar"></i> {{ device.createdAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
+            </p>
+        </article>
+    {% else %}
+        <div class="well">No devices found.</div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'stats-body-id' %}
+
+{% block main %}
+    <h1>Stats:</h1>
+
+
+    <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script>
+        var dataPointsArray = new Array(
+            {% for statY in stats %}
+                {
+                    x: {{ loop.index }},
+                    y: {{ statY }}
+                }
+                {% if loop.last  %}
+                {% else %}
+                    ,
+                {% endif %}
+            {% endfor %}
+        );
+    </script>
+    <div id="chartContainer" style="height: 300px; width: 95%;"></div>
+    <script>
+window.onload = function () {
+    chartInit();
+}
+function chartInit() {
+    var chart = new CanvasJS.Chart("chartContainer",
+        {
+            theme: "theme1", 
+            zoomEnabled: true,
+            panEnabled: true,
+            animationEnabled: true,
+            animationDuration: 5000,
+            title: {
+                text: "Зміна температури у скрубері в залежності від часу",
+                fontsize: 20,
+                fontColor: "#7e838d"
+       
+            },
+            legend: {
+                horizontalAlign: "right",
+                verticalAlign: "center"
+            },
+            axisY: {
+                includeZero: true,
+                valueFormatString:"## t°C"
+            },
+            axisX: {
+                //valueFormatString:"DD-MMM-YY, HH:mm",
+                valueFormatString:"### sec.",
+               
+            },
+            data: [{
+                
+                yValueType: "number",
+                //xValueType: "dateTime",
+                xValueType: "number",
+                type: "area",
+                color: getColor(),
+                //xValueFormatString: "DD-MMM-YY, HH:mm:ss",
+                xValueFormatString: "### sec.",
+                yValueFormatString: "## t°C",
+                dataPoints: dataPointsArray
+            }]
+        }
+    );
+    chart.render();
+    
+}
+function getColor() {
+    var arr = ['#aabde7','#aabde7','#aabde7','#aabde7','#aabde7','#aabde7','#aabde7','#aabde7'];
+    return arr[getRandomInt(0,7)];
+}
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+</script>
+{% endblock %}
+
+{% block sidebar %}
+    {{ show_source_code(_self) }}
+{% endblock %}

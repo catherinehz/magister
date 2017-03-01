@@ -1,0 +1,5 @@
+// Column positioned in center of page
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
