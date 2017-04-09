@@ -6,9 +6,10 @@
     {% for device in devices %}
         <article class="post">
             <h2>
-                <a href="{{ path('device_page', { id: device.id }) }}">
+                <a href="{{ path('watch_device', { id: device.id }) }}">
                     {{ device.title }}
                 </a>
+                (має {{ device.records|length }} записів у базі)
             </h2>
 
             <p class="post-metadata">

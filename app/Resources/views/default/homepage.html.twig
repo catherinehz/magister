@@ -21,7 +21,7 @@
                     Open devices list
                 </p>
                 <p>
-                    <a class="btn btn-primary btn-lg" href="{{ path('devices_index') }}">
+                    <a class="btn btn-primary btn-lg" href="{{ path('list_devices') }}">
                         <i class="fa fa-list" aria-hidden="true"></i> Browse Devices
                     </a>
                 </p>
@@ -30,7 +30,14 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6 col-centered">
+            <a href="{{ path('test_chart') }}" class="btn btn-primary">Налаштування PID регулятора</a>
+        </div>
+        <br/><br/><br/>
+    </div>
+                        
+    <div class="row">
+        <div class="col-sm-6 col-centered">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#defaultPanels" aria-expanded="false" aria-controls="defaultPanels">
                 Show Default Panels
             </button>

@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+{% endblock %}
+
+{% block body_id 'blog_post_show' %}
+
+    {% block main %}
+        <h1>Налаштування PID</h1>
+
+        <div class="row post-comment">
+            {% if results|length > 0 %}
+                <canvas id="chartContainer1" width="800" height="300"></canvas>
+                <br/><br/><br/>
+
+                <script>
+                    var dataPointsArray0 = new Array({% for record in results.0 %}{x:{{ record.x }}, y:1}{% if loop.last  %}{% else %},{% endif %}{% endfor %} );
+                    var dataPointsArray1 = new Array({% for record in results.0 %}{x:{{ record.x }}, y:{{record.y }}}{% if loop.last  %}{% else %},{% endif %}{% endfor %} );
+                    var dataPointsArray2 = new Array({% for record in results.1 %}{x:{{ record.x }}, y:{{record.y }}}{% if loop.last  %}{% else %},{% endif %}{% endfor %} );
+                    var ctx = document.getElementById("chartContainer1");
+
+                    window.onload = function () {
+                        chartInit();
+                    }
+                    function chartInit() {
+                        var myLineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                datasets: [
+                                    {
+                                        label: 'Target',
+                                        data: dataPointsArray0,
+                                        fill:false,
+                                        borderColor: "rgba(185,55,55,1)",
+                                        pointRadius:0,
+                                        pointHoverRadius:0,
+                                        borderWidth:0.8
+                                    },
+                                    {
+                                        label: 'Kp1',
+                                        data: dataPointsArray1,
+                                        fill: false,
+                                        borderColor: "rgba(75,192,192,0.8)",
+                                        pointRadius: 2,
+                                        lineTension:0.4,
+                                        borderWidth:1.1
+                                    },
+                                    {
+                                        label: 'Kp2',
+                                        data: dataPointsArray2,
+                                        fill: false,
+                                        borderColor: "rgba(75,100,200,0.8)",
+                                        pointRadius: 2,
+                                        lineTension: 0.4,
+                                        borderWidth:1.1
+                                    }
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        type: 'linear',
+                                        position: 'bottom'
+                                    }]
+                                }
+                            }
+                        });
+                    }
+                </script>
+            {% else %}
+                <p>No records yet.</p>
+            {% endif %}
+        </div>
+
+    {% endblock %}
+
+    {% block sidebar %}
+    {% endblock %}

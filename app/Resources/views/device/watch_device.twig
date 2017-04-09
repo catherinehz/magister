@@ -32,7 +32,7 @@
         <div id="chartContainer1" style="height: 300px; width: 95%;"></div>
         <br/><br/><br/>
         <div id="chartContainer2" style="height: 300px; width: 95%;"></div>
-        
+
         {#x: "{{ record.createdAt|date("Y-m-d H:i:s", "Europe/Kiev") }}", y: {{ contents.tempScr }}#}
         <script>
             var dataPointsArray1 = new Array({% for record in device.records %}{% set contents = record.content | json_decode %}{x:{{ record.createdAt|date("U") }},y:{{ contents.tempScr }}}{% if loop.last  %}{% else %},{% endif %}{% endfor %});
@@ -42,7 +42,7 @@
         <p>No records yet.</p>
     {% endif %}
     </div>
-    
+
 {% endblock %}
 
 {% block sidebar %}
