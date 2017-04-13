@@ -110,5 +110,15 @@ class PID
         $result = (-0.023)/((4.083*pow($this->_objectCalculationsDone,2))+(4.041*$this->_objectCalculationsDone)+0.1814);
         return $result*0;
     }
+    
+    private function mathModel() {
+        $config = $this->getConfig;
+        $Kx1y1 = $config["S"];
+        $numerator = $Kx1y1*$KFrx1;
+        $denominator = ($Kx1y1*$Ky1x1) - (($Ty1+1)*($Tx1+1));
+        $WFr = $numerator/$denominator;
+        
+        return $WFr;
+    }
 
 }
