@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -15,81 +14,135 @@ class Record
      * @var int
      *
      * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var Device
-     *
-     * @ORM\ManyToOne(targetEntity="Device", inversedBy="records")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $device;
 
     /**
      * @var string
      *
      * @ORM\Column(type="text")
-     * @Assert\NotBlank(message="comment.blank")
-     * @Assert\Length(
-     *     min=5,
-     *     minMessage="comment.too_short",
-     *     max=10000,
-     *     maxMessage="comment.too_long"
-     * )
      */
-    private $content;
+    private $data;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
      */
     private $createdAt;
+
+    /**
+     * @var Device
+     *
+     * @ORM\ManyToOne(targetEntity="Device", inversedBy="records")
+     * @ORM\JoinColumn(name="device_id", referencedColumnName="id")
+     */
+    private $device;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
     }
 
+    /**
+     * Get id
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function getContent()
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return Record
+     */
+    public function setData($data)
     {
-        return $this->content;
+        $this->data = json_encode($data);
+
+        return $this;
     }
 
     /**
-     * @param string $content
+     * Get data
+     *
+     * @return string
      */
-    public function setContent($content)
+    public function getData()
     {
-        $this->content = $content;
+        return json_decode($this->data, true);
     }
 
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Record
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt)
+    /**
+     * Set device
+     *
+     * @param \AppBundle\Entity\Device $device
+     *
+     * @return Record
+     */
+    public function setDevice(\AppBundle\Entity\Device $device = null)
     {
-        $this->createdAt = $createdAt;
+        $this->device = $device;
+
+        return $this;
     }
 
+    /**
+     * Get device
+     *
+     * @return \AppBundle\Entity\Device
+     */
     public function getDevice()
     {
         return $this->device;
     }
 
-    public function setDevice(Device $device)
+    /**
+     * Represent self as JSON
+     *
+     * @return JSON
+     */
+    public function toJson()
     {
-        $this->device = $device;
+        $array = array(
+            'id' => $this->getId(),
+            'data' => $this->getData(),
+            'createdAt' => $this->getCreatedAt(),
+            'device' => $this->getDevice()->getId(),
+        );
+        
+        $json = json_encode($array);
+        return $json;
     }
 }

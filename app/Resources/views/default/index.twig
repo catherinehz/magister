@@ -1,0 +1,29 @@
+{% extends 'base.twig' %}
+
+{% block main %}
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <h1>Вітаю у <strong>WEB SCADA</strong></h1>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <p>
+                <a class="btn btn-primary btn-lg" href="{{ path('browse_devices') }}">
+                    <i class="fa fa-list" aria-hidden="true"></i> Перелік пристроїв
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-lg-6 col-sm-6">
+            <a href="{{ path('homepage') }}" class="btn btn-primary">Налаштування PID регулятора</a>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <a href="{{ path('creation_index') }}" class="btn btn-success">Додати пристрій / записи</a>
+        </div>
+    </div>
+{% endblock %}
+

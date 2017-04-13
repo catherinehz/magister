@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{{ path('homepage') }}">
-                        Web SCADA (Kateryna Huza)
+                        Web SCADA (Катерина Гуза)
                     </a>
 
                     <button type="button" class="navbar-toggle"
@@ -18,30 +18,11 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-
-                        {% block header_navigation_links %}
-                            <li>
-                                <a href="{{ path('homepage') }}">
-                                    <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.homepage'|trans }}
-                                </a>
-                            </li>
-
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <li>
-                                    <a href="{{ path('admin_post_index') }}">
-                                        <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                        {% endblock %}
-
-                        {% if app.user %}
-                            <li>
-                                <a href="{{ path('security_logout') }}">
-                                    <i class="fa fa-sign-out" aria-hidden="true"></i> {{ 'menu.logout'|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
+                        <li>
+                            <a href="{{ path('homepage') }}">
+                                <i class="fa fa-home" aria-hidden="true"></i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

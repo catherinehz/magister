@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -17,80 +16,144 @@ class Device
      * @var int
      *
      * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $title;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(type="datetime")
-     * @Assert\DateTime
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $createdAt;
+    private $config;
 
     /**
-     * @var Record[]|ArrayCollection
+     * @var string
      *
-     * @ORM\OneToMany(
-     *      targetEntity="Record",
-     *      mappedBy="device",
-     *      orphanRemoval=true
-     * )
-     * @ORM\OrderBy({"createdAt": "DESC"})
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mathCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Record", mappedBy="device", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"id": "DESC"})
      */
     private $records;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
         $this->records = new ArrayCollection();
     }
 
+    /**
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param string $title
+     *
+     * @return Device
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
+     * @param string $config
+     *
+     * @return Device
      */
-    public function setTitle($title)
+    public function setConfig($config)
     {
-        $this->title = $title;
-    }
+        $this->config = json_encode($config);
 
-
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
+        return $this;
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @return string
      */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function getConfig()
     {
-        $this->createdAt = $createdAt;
+        return json_decode($this->config, true);
     }
 
+    /**
+     * @param string $mathCode
+     *
+     * @return Device
+     */
+    public function setMathCode($mathCode)
+    {
+        $this->mathCode = $mathCode;
+
+        return $this;
+    }
+
+    /**
+     * Get mathCode
+     *
+     * @return string
+     */
+    public function getMathCode()
+    {
+        return $this->mathCode;
+    }
+
+    /**
+     * Add record
+     *
+     * @param \AppBundle\Entity\Record $record
+     *
+     * @return Device
+     */
+    public function addRecord(\AppBundle\Entity\Record $record)
+    {
+        $this->records[] = $record;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\Record $record
+     */
+    public function removeRecord(\AppBundle\Entity\Record $record)
+    {
+        $this->records->removeElement($record);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function getRecords()
     {
         return $this->records;
     }
-
 }

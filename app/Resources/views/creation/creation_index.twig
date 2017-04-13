@@ -1,0 +1,41 @@
+{% extends 'base.twig' %}
+
+{% block main %}
+    <div class="row text-center">
+        <div class="col-sm-12 col-centered">
+            <h1>Створення початкових даних</h1>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-lg-6 col-sm-6 col-centered">
+            {% for device in devices %}
+                <article class="device">
+                    <h2>
+                        <a href="{{ path('show_device', { id: device.id }) }}">
+                            {{ device.title }}
+                        </a>
+                        (має {{ device.records|length }} записів у базі)
+                    </h2>
+                    <a class="btn btn-primary" href="{{ path('creation_add_records', { id: device.id }) }}">
+                        <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
+                        Додати записи у {{ device.title }}
+                    </a>
+                </article>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    <p>Немає жодного доступного об'єкту керування.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-lg-6 col-sm-6">
+            <a class="btn btn-success" href="{{ path('creation_add_device') }}">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                Додати новий об'єкт
+            </a>
+        </div>
+    </div>
+{% endblock %}
