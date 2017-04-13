@@ -1,0 +1,205 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity()
+ * @ORM\Table(name="devices")
+ */
+class Device
+{
+
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $config;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mathCode;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $Kp;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $Ki;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $Kd;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Record", mappedBy="device")
+     */
+    private $records;
+
+    public function __construct()
+    {
+        $this->records = new ArrayCollection();
+    }
+
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return Device
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $config
+     *
+     * @return Device
+     */
+    public function setConfig($config)
+    {
+        $this->config = json_encode($config);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfig()
+    {
+        return json_decode($this->config, true);
+    }
+
+    /**
+     * @param string $mathCode
+     *
+     * @return Device
+     */
+    public function setMathCode($mathCode)
+    {
+        $this->mathCode = $mathCode;
+
+        return $this;
+    }
+
+    /**
+     * Get mathCode
+     *
+     * @return string
+     */
+    public function getMathCode()
+    {
+        return $this->mathCode;
+    }
+
+    /**
+     * @param float $kp
+     *
+     * @return Device
+     */
+    public function setKp($kp)
+    {
+        $this->Kp = $kp;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getKp()
+    {
+        return $this->Kp;
+    }
+
+    /**
+     * @param float $ki
+     *
+     * @return Device
+     */
+    public function setKi($ki)
+    {
+        $this->Ki = $ki;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getKi()
+    {
+        return $this->Ki;
+    }
+
+    /**
+     * @param float $kd
+     *
+     * @return Device
+     */
+    public function setKd($kd)
+    {
+        $this->Kd = $kd;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getKd()
+    {
+        return $this->Kd;
+    }
+}

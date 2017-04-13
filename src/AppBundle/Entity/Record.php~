@@ -1,0 +1,48 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="records")
+ */
+class Record
+{
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
+    private $data;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var Device
+     *
+     * @ORM\ManyToOne(targetEntity="Device", inversedBy="records")
+     * @ORM\JoinColumn(name="device_id", referencedColumnName="id")
+     */
+    private $device;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+}
