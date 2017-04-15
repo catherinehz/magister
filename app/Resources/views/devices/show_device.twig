@@ -1,232 +1,35 @@
 {% extends 'base.twig' %}
 
 {% block javascripts %}
-    <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+    <script src="{{ asset('js/lib/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('js/lib/Chart.js') }}"></script>
     <script src="{{ asset('js/show_device.js') }}"></script>
     <script src="{{ asset('js/pid.js') }}"></script>
+    <script src="{{ asset('js/device_history.js') }}"></script>
 {% endblock %}
 
 {% block main %}
     <input type="hidden" id="deviceId" value="{{ device.id }}" />
+    
     <div class="row text-center">
         <div class="col-sm-12">
-            <h1><strong>{{ device.title }}</strong></h1>
-        </div>
-    </div>
+            <!-- Вкладки навігації -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#pult-operatora-tab" aria-controls="pult-operatora-tab" role="tab" data-toggle="tab">Пульт оператора</a></li>
+                <li role="presentation"><a href="#pid-config-tab" aria-controls="profile" role="tab" data-toggle="tab">Налаштування PID</a></li>
+            </ul>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <img src="{{ asset('images/apparatus.jpg') }}" />
-        </div>
-        <div class="col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Пульт оператора</h3>
+            <!-- Контент відповідно до навігаційних вкладок -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="pult-operatora-tab">
+                    {{ include('devices/_pult-operatora.twig') }}
                 </div>
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <tbody>
-                            <tr>
-                                <td>Витрата C2H2 (Fg)</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input type="text" value="{{ lastRecord.getData['C2H2-Fg'] }}" disabled />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Витрата NaOH (Fr)</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input type="text" value="{{ lastRecord.getData['NaOH-Fr'] }}" disabled />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Концентрація CO2 на вході (y0)</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input type="text" value="{{ lastRecord.getData['CO2-in-C2H2-y0'] }}" disabled />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Концентрація CO2 на виході (y1)</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input type="text" value="{{ lastRecord.getData['CO2-in-C2H2-y1'] }}" disabled />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Завдання для концентрації CO2 на виході (y1)</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input id="co2Config" type="text" value="{{ device.getConfig['CO2-in-C2H2-y1'] }}" />
-                                        <button class="btn btn-default disabled" id="saveCo2Config"><i class="fa fa-save"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div role="tabpanel" class="tab-pane" id="pid-config-tab">
+                    {{ include('devices/_pid-config.twig') }}
                 </div>
             </div>
-
         </div>
     </div>
-                                        
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Налаштування PID-регулятора</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <tbody>
-                            <tr>
-                                <td>Kp</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input id="Kp" type="text" value="{{ device.getConfig['Kp'] }}" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ki</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input id="Ki" type="text" value="{{ device.getConfig['Ki'] }}" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Kd</td>
-                                <td>
-                                    <div class="input-group input-group-lg">
-                                        <input id="Kd" type="text" value="{{ device.getConfig['Kd'] }}" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <button class="btn btn-success" id="updatePidRegulator"><i class="fa fa-save"></i>Оновити коефіцієнти</button>
-        </div>
-        <div class="col-sm-6">
-            <canvas id="PidChart" width="100%" height=""></canvas>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-        {% if device.records|length > 0 %}
-            <canvas id="chartContainer1" width="800" height="300"></canvas>
-            <br/><br/><br/>
-            <canvas id="chartContainer2" width="800" height="300"></canvas>
-
-            <script>
-                var dataPointsArray1 = new Array({% for record in device.records %}{x:"{{ record.createdAt|date() }}",y:{{ record.data['NaOH-Fr'] }}}{% if loop.last  %}{% else %},{% endif %}{% endfor %});
-                var dataPointsArray2 = new Array({% for record in device.records %}{x:"{{ record.createdAt|date() }}",y:{{ record.data['CO2-in-C2H2-y1'] }}}{% if loop.last  %}{% else %},{% endif %}{% endfor %});
-                {# var dataPointsArray2 = new Array({% for record in device.records %}{% set recordValsObj = record.content | json_decode_assoc %}{x:{{ record.createdAt|date("U") }},y:{{ recordValsObj['CO2-in-C2H2-y1'] }}}{% if loop.last  %}{% else %},{% endif %}{% endfor %}); #}
-
-                var ctx1 = document.getElementById("chartContainer1");
-                var ctx2 = document.getElementById("chartContainer2");
-
-                window.onload = function () {
-                    chartInit1();
-                    chartInit2();
-                }
-                function chartInit1() {
-                    var myLineChart1 = new Chart(ctx1, {
-                        type: 'line',
-                        data: {
-                            datasets: [
-                                {
-                                    label: "Зміна витрати NaOH в залежності від часу",
-                                    data: dataPointsArray1,
-                                    fill: true,
-                                    borderColor: "rgba(75,192,192,0.8)",
-                                    pointRadius: 1,
-                                    lineTension:0.4,
-                                    borderWidth:1.1
-                                }
-                            ]
-                        },
-                        options: {
-                            scales: {
-                                xAxes: [{
-                                    type: 'time',
-                                    time: {
-                                        displayFormats: {
-                                            minute: 'HH:mm'
-                                        }
-                                    }
-                                }],
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        suggestedMin: 900,    // minimum will be 0, unless there is a lower value.
-                                        suggestedMax: 1000
-                                        // OR //
-                                        //beginAtZero: true   // minimum value will be 0.
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                }
-                function chartInit2() {
-                    var myLineChart2 = new Chart(ctx2, {
-                        type: 'line',
-                        data: {
-                            datasets: [
-                                {
-                                    label: "Зміна концентрації CO2 на виході",
-                                    data: dataPointsArray2,
-                                    fill: true,
-                                    borderColor: "rgba(75,192,192,0.8)",
-                                    pointRadius: 2,
-                                    lineTension:0.4,
-                                    borderWidth:1.1
-                                }
-                            ]
-                        },
-                        options: {
-                            scales: {
-                                xAxes: [{
-                                    type: 'time',
-                                    time: {
-                                        displayFormats: {
-                                            minute: 'HH:mm'
-                                        }
-                                    }
-                                }],
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
-                                        suggestedMax: 0.1
-                                        // OR //
-                                        //beginAtZero: true   // minimum value will be 0.
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                }
-            </script>
-        {% else %}
-            <div class="alert alert-danger" role="alert">
-                <p>У {{ device.title }} ще немає записів.</p>
-            </div>
-        {% endif %}
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block sidebar %}

@@ -3,3 +3,60 @@
     float: none;
     margin: 0 auto;
 }
+
+
+/* Sticky footer */
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.page-wrap {
+  flex: 1;
+}
+
+/* Device tabs */
+.tab-pane {
+    padding-top: 30px;
+}
+
+/* Spacers */
+.top-spacer-5 {
+    margin-top: 5px;
+}
+.top-spacer-10 {
+    margin-top: 10px;
+}
+.top-spacer-15 {
+    margin-top: 15px;
+}
+.top-spacer-30 {
+    margin-top: 30px;
+}
+.top-spacer-45 {
+    margin-top: 45px;
+}
+.top-spacer-60 {
+    margin-top: 60px;
+}
+.bottom-spacer-15 {
+    margin-bottom: 15px;
+}
+.bottom-spacer-30 {
+    margin-bottom: 30px;
+}
+.bottom-spacer-45 {
+    margin-bottom: 45px;
+}
+.bottom-spacer-60 {
+    margin-bottom: 60px;
+}
+.left-padding-10 {
+    padding-left:10px;
+}
+.bottom-padding-30 {
+    padding-bottom:30px;
+}

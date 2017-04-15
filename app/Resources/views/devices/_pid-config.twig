@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default top-spacer-15">
+            <div class="panel-heading">
+                <h3 class="panel-title">Налаштування PID-регулятора</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Kp</td>
+                            <td>
+                                <div class="input-group input-group-lg">
+                                    <input id="Kp" type="text" value="{{ device.getConfig['Kp'] }}" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ki</td>
+                            <td>
+                                <div class="input-group input-group-lg">
+                                    <input id="Ki" type="text" value="{{ device.getConfig['Ki'] }}" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kd</td>
+                            <td>
+                                <div class="input-group input-group-lg">
+                                    <input id="Kd" type="text" value="{{ device.getConfig['Kd'] }}" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button class="btn btn-success" id="updatePidRegulator"><i class="fa fa-save"></i>Оновити коефіцієнти</button>
+    </div>
+    <div class="col-sm-6">
+        <canvas id="PidChart" width="100%" height=""></canvas>
+    </div>
+</div>
