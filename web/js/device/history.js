@@ -2,27 +2,27 @@
 
 var updateDeviceInterval = null;
 $(document).ready(function(){
-    updateDeviceStats();
-    updateDeviceInterval = setInterval(function(){ updateDeviceStats() }, 10*1000); //кожні 30 секунд
+    refreshDeviceStats();
+    updateDeviceInterval = setInterval(function(){ refreshDeviceStats() }, 10*1000); //кожні 30 секунд
 });
 
-function updateDeviceStats() {
+function refreshDeviceStats() {
     $.ajax({
 	url: baseUrl+"/api/getDeviceRecords/"+$('#deviceId').val()+"/0/100",
 	type: "POST",
 	data: {},
 	success: function(response) {
             var deviceData = jQuery.parseJSON(response);
-            updateDeviceNumbers(deviceData);
+            redrawDeviceNumbers(deviceData);
             redrawDeviceCharts(deviceData);
 	},
         error: function(response) {
-            console.log('updateDeviceStats(): Сталася помилка, спробуйте пізніше!');
+            console.log('refreshDeviceStats(): Сталася помилка, спробуйте пізніше!');
         }
     });
 }
 
-function updateDeviceNumbers(deviceData) {
+function redrawDeviceNumbers(deviceData) {
     $('#C2H2-Fg').val(deviceData.records[0].data['C2H2-Fg']);
     $('#NaOH-Fr').val(deviceData.records[0].data['NaOH-Fr']);
     $('#CO2-in-C2H2-y0').val(deviceData.records[0].data['CO2-in-C2H2-y0']);

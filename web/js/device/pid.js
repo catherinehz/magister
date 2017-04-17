@@ -109,7 +109,7 @@ function savePidRegulatorConfig() {
             //TODO
 	},
         error: function(response) {
-            alert('Сталася помилка, спробуйте пізніше!');
+            alert('savePidRegulatorConfig: Сталася помилка, спробуйте пізніше!');
         }
     });
 }
@@ -148,9 +148,20 @@ function getPidChartData() {
 }
 
 function updatePidChart(chartData) {
-     if (!pidChartObject) {
-        var ctxPid = document.getElementById("PidChart");
-        pidChartObject = new Chart(ctxPid, {
+    var targetDataArray = new Array(
+        {
+            x: chartData[0]['x'],
+            y: 1
+        },
+        {
+            x: chartData[chartData.length-1]['x'],
+            y: 1
+        }
+    );
+
+    if (!pidChartObject) {
+        var domObject = document.getElementById("PidChart");
+        pidChartObject = new Chart(domObject, {
             type: 'line',
             data: {
                 datasets: [
@@ -162,6 +173,15 @@ function updatePidChart(chartData) {
                         pointRadius: 1,
                         lineTension: 0.4,
                         borderWidth: 1.1
+                    },
+                    {
+                        label: "Завдання",
+                        data: targetDataArray,
+                        fill: false,
+                        borderColor: "rgba(255,70,70,0.8)",
+                        pointRadius: 0,
+                        lineTension:0,
+                        borderWidth:0.9
                     }
                 ]
             },

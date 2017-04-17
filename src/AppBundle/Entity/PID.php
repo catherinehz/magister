@@ -10,28 +10,122 @@ class PID
      */
     private $device;
 
+    /**
+     * @var array
+     */
+    private $deviceConfig;
+
+    /**
+     * @var Record
+     */
+    private $deviceLastRecord;
+
+    /**
+     * @var Record
+     */
+    private $devicePreviousRecord;
+
+    /**
+     * Час інтегрування
+     * @var float
+     */
+    private $_dt = 1.5;
+
     public function __construct(Device $device)
     {
         $this->device = $device;
+
+        $this->deviceConfig = $device->getConfig();
+
+        $this->deviceLastRecord = $device->getRecords()->first();
+
+        $tmpVar = $device->getRecords()->slice(1,1);
+        if (count($tmpVar)) {
+            $this->devicePreviousRecord = $tmpVar[0];
+        }
     }
 
-    public function calculatePID()
+    /* ------ Розрахунки ПІД-регулятора ------ */
+
+    /**
+     *
+     * @return float
+     */
+    public function regulateNaOH()
     {
-        return 0.5;
+        //Вхідні параметри для розрахунків
+        $targetCO2 = $this->deviceConfig['CO2-in-C2H2-y1-target']; //Завдання СО"
+        $currentCO2 = $this->deviceLastRecord['CO2-in-C2H2-y1']; //Поточне СО2
+
+        //ПІД-коефіцієнти
+        $Kp = $this->deviceConfig['Kp'];
+        $Ki = $this->deviceConfig['Ki'];
+        $Kd = $this->deviceConfig['Kd'];
+
+        //Похибка
+        $error = $targetCO2 - $currentCO2;
+
+        // --- Пропорційна складова
+        $pRegulator = $error * $Kp;
+
+        // --- Інтегральна складова
+        $integralError = $this->deviceLastRecord['integralError'];
+        $currentIntegralError = ($integralError + ($error * $this->_dt));
+        $iRegulator = $Ki * $currentIntegralError;
+
+        // --- Диференційна складова
+        if ($this->devicePreviousRecord) {
+            $previousRecordData = $this->devicePreviousRecord->getData();
+            $previousDerivativeError = $previousRecordData['derivativeError'];
+        } else {
+            $previousDerivativeError = 0;
+        }
+        $currentDerivativeError = ($error - $previousDerivativeError) / $this->_dt;
+        $dRegulator = $Kd * $currentDerivativeError;
+
+        //Результуючий кофіцієнт ПІД-регулятора
+        $pidResult = $pRegulator + $iRegulator + $dRegulator;
+
+        //Витрата NaOH після застосування ПІД-регулятора
+        $pidNaOHFr = $this->deviceLastRecord['NaOH-Fr'] + ($pidResult*$this->deviceLastRecord['NaOH-Fr']);
+        if ($pidNaOHFr > $this->deviceConfig['NaOH-Fr-Max']) {
+            $pidNaOHFr = $this->deviceConfig['NaOH-Fr-Max'];
+            $currentIntegralError = $integralError;
+            $currentDerivativeError = $previousDerivativeError;
+        } elseif($pidNaOHFr < $this->deviceConfig['NaOH-Fr-Min']) {
+            $pidNaOHFr = $this->deviceConfig['NaOH-Fr-Min'];
+            $currentIntegralError = $integralError;
+            $currentDerivativeError = $previousDerivativeError;
+        }
+        
+        $resultArray = [
+            'NaOH-Fr' => $pidNaOHFr,
+            'integralError' => $currentIntegralError,
+            'derivativeError' => $currentDerivativeError,
+        ];
+        return $resultArray;
     }
 
+    /* ------ Для налаштування ПІД-регулятора ------ */
+
+    /**
+     *
+     * @param float $Kp
+     * @param float $Ki
+     * @param float $Kd
+     * @return JSON
+     */
     public function generatePidChart($Kp, $Ki, $Kd)
     {
         $deviceConfig = $this->device->getConfig();
         if ($Kp === null) $Kp = $deviceConfig['Kp'];
-        if ($Ki === null) $Kp = $deviceConfig['Ki'];
-        if ($Kd === null) $Kp = $deviceConfig['Kd'];
+        if ($Ki === null) $Ki = $deviceConfig['Ki'];
+        if ($Kd === null) $Kd = $deviceConfig['Kd'];
 
         $chartData = $this->_buildPRegulatorChart($Kp, $Ki, $Kd);
 
         return json_encode($chartData);
     }
-
 
     private function _buildPRegulatorChart($Kp, $Ki, $Kd, $inertia = 6, $limit = 499) {
         $results = [];
@@ -50,11 +144,11 @@ class PID
         $iRegulator = $error * $Ki;
         $iState = 0;
         $preError = 0;
-        $dt = 6;
+        $this->_dt = 6;
 
         $last10Points = array();
         $maxDeviation = 0.02;
-        
+
         $scrubberModel = new ScrubberModel($this->device);
 
         while (true) {
@@ -66,14 +160,14 @@ class PID
                 $pRegulator = $error * $Kp;
 
                 //Integral regulator effect
-                $iState = ($iRegulator + ($error*$dt));
+                $iState = ($iRegulator + ($error*$this->_dt));
                 if ($iState > 1) $iState = 1;
                 if ($iState < -1) $iState = -1;
                 $iRegulator = $Ki * $iState;
 
                 //Integral regulator effect
-                //$dState = ($dRegulator + ($error*$dt));
-                $dState = ($error - $preError)/$dt;
+                //$dState = ($dRegulator + ($error*$this->_dt));
+                $dState = ($error - $preError)/$this->_dt;
                 $dRegulator = $Kd * $dState;
                 $preError = $error;
 

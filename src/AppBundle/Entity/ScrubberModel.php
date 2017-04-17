@@ -58,10 +58,10 @@ class ScrubberModel
 
     /**
      * 
-     * @param float $FrFromPid - витрата NaOH встановлена PID-регулятором
+     * @param array $newValues <- витрата NaOH встановлена PID-регулятором
      * @return float
      */
-    private function mathModel($FrFromPid) {
+    private function mathModel($newValues) {
         //Device data = завдання об'єкту
         $c = $this->device->getConfig();
         
@@ -78,6 +78,29 @@ class ScrubberModel
         
         //Відносне значення (у відсотках)
         $y1Result = round(($y1Math / $c['CO2-in-C2H2-y1-target']), 5);
+        
+        return $y1Result; //Результуюча вихідна концентрація CO2 у відсотках
+    }
+
+    /**
+     * 
+     * @param array $newValues <- витрата NaOH встановлена PID-регулятором
+     * @return float
+     */
+    private function mathModelMock($newValues) {
+        //Device data = завдання об'єкту
+        $c = $this->device->getConfig();
+        
+        //Last record data = поточний стан об'єкту
+        $lastRecord = $device->getRecords()->first();
+        $rd = $lastRecord->getData();
+
+        //Витрата NaOH встановлена PID-регулятором
+        $FrFromPid = (float)$FrFromPid;
+        
+        //Розрахунок вихідного значення конц. СО2
+        //TODO: Math
+        $y1Math = 0.033; // CO2 кг/м.куб.
         
         return $y1Result; //Результуюча вихідна концентрація CO2 у відсотках
     }

@@ -50,7 +50,7 @@ class ApiController extends Controller
                 'createdAt' => $record->getCreatedAt(),
             );
         }
-
+        
         //Create JSON response
         $response = array(
             'records' => $recordsArray,
@@ -183,7 +183,7 @@ class ApiController extends Controller
      * @Route("/api/emulateDevice/{id}", defaults={}, requirements={"id": "[1-9]\d*"}, name="api_emulate_device")
      * @Method({"GET","POST"})
      */
-    public function emulateDevice(Device $device)
+    public function emulateDeviceAction(Device $device)
     {
         $emulator = new Emulator($device);
         $emulator->generateRecords();
