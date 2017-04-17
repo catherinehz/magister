@@ -20,11 +20,14 @@ class PID
         return 0.5;
     }
 
-    public function generatePidChart()
+    public function generatePidChart($Kp, $Ki, $Kd)
     {
         $deviceConfig = $this->device->getConfig();
+        if ($Kp === null) $Kp = $deviceConfig['Kp'];
+        if ($Ki === null) $Kp = $deviceConfig['Ki'];
+        if ($Kd === null) $Kp = $deviceConfig['Kd'];
 
-        $chartData = $this->_buildPRegulatorChart($deviceConfig['Kp'], $deviceConfig['Ki'], $deviceConfig['Kd']);
+        $chartData = $this->_buildPRegulatorChart($Kp, $Ki, $Kd);
 
         return json_encode($chartData);
     }
@@ -52,6 +55,8 @@ class PID
         $last10Points = array();
         $maxDeviation = 0.02;
         
+        $scrubberModel = new ScrubberModel($this->device);
+
         while (true) {
             $currentTime = $currentTime + $timeStep;
             $error = $targetValue - $currentValue;
@@ -76,9 +81,11 @@ class PID
                 $this->_objectCalculationsDone = 0;
             }
 
-            $pid = $pRegulator + $iRegulator + $dRegulator;
+            $pid = $pRegulator + $iRegulator + $dRegulator; //0.01
 
             $currentValue = $currentValue + $pid + $this->_calculateObjectBehaviour();
+            //$FrFromPid = ($pid*$lastRecord['NaOH-Fr'])+$lastRecord['NaOH-Fr'];
+            //$currentValue = $scrubberModel->mathModel($FrFromPid);
 
             $results[] = array('y'=>$currentValue, 'x'=>$currentTime);
             if (count($last10Points) < 10) {
@@ -93,10 +100,10 @@ class PID
             if ($i > $limit) break;
             if ($this->_areWeStabilized($last10Points, $maxDeviation)) break;
         }
-        
+
         return $results;
     }
-    
+
     private function _areWeStabilized($last10Points, $maxDeviation) {
         foreach ($last10Points as $value) {
             if (abs($value-1) > $maxDeviation) return false;
@@ -109,16 +116,6 @@ class PID
         $this->_objectCalculationsDone++;
         $result = (-0.023)/((4.083*pow($this->_objectCalculationsDone,2))+(4.041*$this->_objectCalculationsDone)+0.1814);
         return $result*0;
-    }
-    
-    private function mathModel() {
-        $config = $this->getConfig;
-        $Kx1y1 = $config["S"];
-        $numerator = $Kx1y1*$KFrx1;
-        $denominator = ($Kx1y1*$Ky1x1) - (($Ty1+1)*($Tx1+1));
-        $WFr = $numerator/$denominator;
-        
-        return $WFr;
     }
 
 }

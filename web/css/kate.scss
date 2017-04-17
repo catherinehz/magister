@@ -1,0 +1,199 @@
+/* Column positioned in center of page ------------------------------------------------------------------------- */
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+/* Sticky footer ------------------------------------------------------------------------- */
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.page-wrap {
+  flex: 1;
+}
+
+/* Spacers ------------------------------------------------------------------------- */
+.top-spacer-5 {
+    margin-top: 5px;
+}
+.top-spacer-10 {
+    margin-top: 10px;
+}
+.top-spacer-15 {
+    margin-top: 15px;
+}
+.top-spacer-30 {
+    margin-top: 30px;
+}
+.top-spacer-45 {
+    margin-top: 45px;
+}
+.top-spacer-60 {
+    margin-top: 60px;
+}
+.bottom-spacer-15 {
+    margin-bottom: 15px;
+}
+.bottom-spacer-30 {
+    margin-bottom: 30px;
+}
+.bottom-spacer-45 {
+    margin-bottom: 45px;
+}
+.bottom-spacer-60 {
+    margin-bottom: 60px;
+}
+.left-padding-10 {
+    padding-left:10px;
+}
+.bottom-padding-30 {
+    padding-bottom:30px;
+}
+
+/* Basic styles ------------------------------------------------------------------------- */
+p, ul, ol {
+    font-size: 19px;
+    margin-bottom: 1.5em;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+code {
+    background: #ecf0f1;
+    color: #2c3e50;
+}
+
+.text-danger, .text-danger:hover {
+    color: #e74c3c;
+}
+
+i {
+    margin-right: 0.25em;
+}
+
+.table.table-middle-aligned th,
+.table.table-middle-aligned td {
+    vertical-align: middle;
+}
+
+/* Page elements ------------------------------------------------------------------------- */
+body {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: "Lato", sans-serif;
+}
+
+header {
+    margin-bottom: 2em;
+
+    ul.nav li {
+        margin-bottom: 0;
+    }
+
+    h4.navbar-brand {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .navbar-default {
+        background-color: inherit;
+
+        .navbar-brand {
+            color: inherit;
+            &:focus, &:hover {
+                color: #d7e6f4;
+            }
+        }
+
+        .navbar-nav > li > a {
+            color: inherit;
+
+            &:focus, &:hover {
+                color: #d7e6f4;
+            }
+        }
+
+        .navbar-toggle {
+            &:focus, &:hover {
+                background-color: inherit;
+                border-color: #d7e6f4;
+                
+                .icon-bar {
+                    background-color: #d7e6f4;
+                }
+            }
+            .icon-bar {
+                background-color: #FFFFFF;
+            }
+        }
+
+    }
+}
+
+
+
+
+footer {
+    margin-top: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+
+    p {
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+
+    #footer-resources {
+        text-align: right;
+
+        .fa {
+            color: #FFFFFF;
+            font-size: 16px;
+            margin-left: 0.5em;
+        }
+    }
+}
+
+
+/* Forms ------------------------------------------------------------------------- */
+.form-group.has-error .form-control {
+    border-color: #e74c3c;
+}
+
+.form-group.has-error .control-label {
+    color: #e74c3c;
+}
+
+.form-group.has-error .help-block {
+    background-color: #e74c3c;
+    color: #fff;
+    font-size: 15px;
+    padding: 1em;
+}
+
+.form-group.has-error .help-block ul,
+.form-group.has-error .help-block li {
+    margin-bottom: 0;
+}
+.form-group.has-error .help-block li + li {
+    margin-top: 0.5em;
+}
+
+textarea {
+    max-width: 100%;
+}
+
+/* Device tabs ------------------------------------------------------------------------- */
+.tab-pane {
+    padding-top: 30px;
+}

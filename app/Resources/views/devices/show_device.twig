@@ -3,10 +3,13 @@
 {% block javascripts %}
     <script src="{{ asset('js/lib/moment-with-locales.min.js') }}"></script>
     <script src="{{ asset('js/lib/Chart.js') }}"></script>
-    <script src="{{ asset('js/show_device.js') }}"></script>
-    <script src="{{ asset('js/pid.js') }}"></script>
-    <script src="{{ asset('js/device_history.js') }}"></script>
+    <script src="{{ asset('js/device/controls.js') }}"></script>
+    <script src="{{ asset('js/device/pid.js') }}"></script>
+    <script src="{{ asset('js/device/history.js') }}"></script>
+    {# <script src="{{ asset('js/device/emulate.js') }}"></script> #}
 {% endblock %}
+
+{% block headtitle %}{{ device.title }} - Пульт оператора{% endblock %}
 
 {% block main %}
     <input type="hidden" id="deviceId" value="{{ device.id }}" />

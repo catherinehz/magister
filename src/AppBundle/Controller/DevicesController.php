@@ -16,17 +16,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class DevicesController extends Controller
 {
     /**
-     * @Route("/", defaults={}, name="browse_devices")
+     * @Route("/", defaults={}, name="list_devices")
      * @Method("GET")
      */
-    public function browseDevicesAction()
+    public function listDevicesAction()
     {
         // Fetch Devices
         $repository = $this->getDoctrine()->getRepository('AppBundle:Device');
         $devices = $repository->findAll();
 
         //Render view templates (pass Devices to it)
-        return $this->render('devices/browse_devices.twig', ['devices' => $devices]);
+        $twigData = [
+            'devices' => $devices,
+            'page_title' => 'Перелік об\'єктів керування',
+        ];
+        return $this->render('devices/list_devices.twig', $twigData);
     }
 
     /**
@@ -36,6 +40,11 @@ class DevicesController extends Controller
     public function showDeviceAction(Device $device)
     {
         $lastRecord = $device->getRecords()->first();
-        return $this->render('devices/show_device.twig', ['device' => $device, 'lastRecord' => $lastRecord]);
+        $twigData = [
+            'device' => $device,
+            'lastRecord' => $lastRecord,
+            'page_title' => $device->getTitle()
+        ];
+        return $this->render('devices/show_device.twig', $twigData);
     }
 }

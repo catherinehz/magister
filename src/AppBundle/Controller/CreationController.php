@@ -49,7 +49,7 @@ class CreationController extends Controller
             
             //Config (initial values for device parameters)
             $config = array(
-                'CO2-in-C2H2-y1'=>0.04,
+                'CO2-in-C2H2-y1-target'=>0.04,
                 'Kp'=>0.1,
                 'Ki'=>0.1,
                 'Kd'=>0.1,
@@ -57,10 +57,6 @@ class CreationController extends Controller
             
             $device->setConfig($config);
             
-            //Device Math Model
-            $mathModel = '$config = $this->getConfig;$Kx1y1 = $config["S"];$numerator = $Kx1y1*$KFrx1;$denominator = ($Kx1y1*$Ky1x1) - (($Ty1+1)*($Tx1+1));$WFr = $numerator/$denominator;';
-            $device->setMathCode($mathModel);
-
             //Save new device to DB
             $em = $this->getDoctrine()->getManager();
             $em->persist($device);
@@ -78,11 +74,13 @@ class CreationController extends Controller
     public function addRecordsAction(Device $device)
     {
         // Initial Values
+        $deviceConfig = $device->getConfig();
         $dataArrayInitial = array(
             'C2H2-Fg'=>100,
-            'NaOH-Fr'=>960, //<--
+            'NaOH-Fr'=>960, //<-- Витрата NaOH
             'CO2-in-C2H2-y0'=>0.060,
-            'CO2-in-C2H2-y1'=>0.020, //<--  Вихідн. конц. CO2 в суміші C2H2
+            'CO2-in-C2H2-y1'=>0.020, //<-- Вихідн. конц. CO2 в суміші C2H2
+            'CO2-in-C2H2-y1-target'=>$deviceConfig['CO2-in-C2H2-y1-target'], //<--  Завдання конц. CO2 в суміші C2H2
             'CO2-in-NaOH-x0'=>0,
             'CO2-in-NaOH-x1'=>0.0028,
             'Kg'=>30.022,
@@ -93,6 +91,9 @@ class CreationController extends Controller
             'Vr'=>2,
             'Pg'=>1100,
             'Pr'=>2130,
+            'Kp'=>$deviceConfig['Kp'],
+            'Ki'=>$deviceConfig['Ki'],
+            'Kd'=>$deviceConfig['Kd'],
         );
         $dataArray = $dataArrayInitial;
         

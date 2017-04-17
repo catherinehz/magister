@@ -1,21 +1,21 @@
 var baseUrl = $('meta[name=baseurl]').attr("content");
-var co2Config = parseFloat($('#co2Config').val().trim());
+var previousCO2Target = parseFloat($('#CO2-in-C2H2-y1-target').val().trim());
 
 $(document).ready(function(){
     $('#saveCo2Config').click(saveCo2Config);
-    $('#co2Config').keyup(updateCo2ConfigBtn);
+    $('#CO2-in-C2H2-y1-target').keyup(updateCo2ConfigBtn);
 });
 
 function updateCo2ConfigBtn() {
     //Перевірка, чи є зміни у полі "Завдання"
-    var currentCo2Config = parseFloat($('#co2Config').val().trim());
-    if (isNaN(currentCo2Config)) {
+    var currentCO2Target = parseFloat($('#CO2-in-C2H2-y1-target').val().trim());
+    if (isNaN(currentCO2Target)) {
         alert('Неправильне значення! Напр: 0.06');
         return;
     }
 
     //Змін нема
-    if (co2Config == currentCo2Config) {
+    if (previousCO2Target == currentCO2Target) {
         $('#saveCo2Config').addClass('disabled');
         $('#saveCo2Config').removeClass('btn-success');
         $('#saveCo2Config').addClass('btn-default');
@@ -30,26 +30,26 @@ function updateCo2ConfigBtn() {
 
 function saveCo2Config() {
     //Перевірка, чи є зміни у полі "Завдання"
-    var currentCo2Config = parseFloat($('#co2Config').val().trim());
-    if (isNaN(currentCo2Config)) {
+    var currentCO2Target = parseFloat($('#CO2-in-C2H2-y1-target').val().trim());
+    if (isNaN(currentCO2Target)) {
         alert('Неправильне значення! Напр: 0.06');
         return;
     }
 
     //Змін нема
-    if (co2Config == currentCo2Config) return;
+    if (previousCO2Target == currentCO2Target) return;
 
     //Є зміни у полі "Завдання" - відсилаємо нове значення для запису у базу
     $.ajax({
 	url: baseUrl+"/api/updateDeviceConfig/"+$('#deviceId').val(),
 	type: "POST",
-	data: {'CO2-in-C2H2-y1':currentCo2Config},
+	data: {'CO2-in-C2H2-y1-target':currentCO2Target},
 	success: function(response) {
             console.log(response);
 
             //Після запису вважаємо, що змін нема
-            co2Config = currentCo2Config;
-            if (co2Config == currentCo2Config) {
+            previousCO2Target = currentCO2Target;
+            if (previousCO2Target == currentCO2Target) {
                 $('#saveCo2Config').addClass('disabled');
                 $('#saveCo2Config').removeClass('btn-success');
                 $('#saveCo2Config').addClass('btn-default');

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-6">
-        <div class="panel panel-default top-spacer-15">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Налаштування PID-регулятора</h3>
             </div>
@@ -31,14 +31,28 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="100%">
+                                <div class="top-spacer-30">
+                                    <button class="btn btn-default disabled" id="savePidConfig"><i class="fa fa-save"></i>Зберегти коефіцієнти</button>
+                                    <button class="btn btn-default disabled" id="updatePidChart"><i class="fa fa-bar-chart"></i>Оновити графік</button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <button class="btn btn-success" id="updatePidRegulator"><i class="fa fa-save"></i>Оновити коефіцієнти</button>
     </div>
     <div class="col-sm-6">
-        <canvas id="PidChart" width="100%" height=""></canvas>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Перехідна характеристика системи з ПІД-регулятором</h3>
+            </div>
+            <div class="panel-body">
+                <canvas id="PidChart" width="100%" height=""></canvas>
+            </div>
+        </div>
     </div>
 </div>

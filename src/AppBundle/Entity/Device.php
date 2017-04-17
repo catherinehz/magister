@@ -94,11 +94,19 @@ class Device
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getConfig()
     {
         return json_decode($this->config, true);
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigJson()
+    {
+        return $this->config;
     }
 
     /**
