@@ -166,16 +166,29 @@ class ApiController extends Controller
 
     /**
      * @Route("/api/sync/{id}", defaults={}, requirements={"id": "[1-9]\d*"}, name="api_sync")
-     * @Method({"GET","POST"})
+     * @Method({"POST"})
      */
-    public function sync(Device $device)
+    public function sync(Device $device, Request $request)
     {
         //Принять данные от объекта
-        //Записать их в базу (табл. Records)
+        $dataArrayReceived = $request->get()->all();
+        $dateTime = new \DateTime('now', new \DateTimeZone('Europe/Kiev'));
         
-        //Достать свежие данные конфигурации табл. Device (задание для СО2, Kp, Ki, Kd) = $deviceConfig
+        //Создать объект Records
+        $record = new Record();
+        $record->setDevice($device);
+        $record->setData($dataArrayReceived);
+        $record->setCreatedAt($dateTime);
         
-        //Отправить $deviceConfig объхекту управления
+        //Записать объект в базу (табл. Records)
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($record);
+        $em->flush();
+        
+        //Достать свежую конфигурацию объекта (из табл. Device: задание для СО2, коэф.: Kp, Ki, Kd)
+        $deviceConfig = $device->getConfigJson();
+        
+        //Отправить свежий $deviceConfig объекту управления
         return new Response($deviceConfig, 200);
     }
 
