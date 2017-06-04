@@ -40,7 +40,7 @@ class Emulator
         $currentDateTime = new \DateTime('now', new \DateTimeZone('Europe/Kiev'));
         $dateTime = $this->deviceLastRecord->getCreatedAt();
         $dateTime->setTimezone(new \DateTimeZone('Europe/Kiev'));
-        $dateTime->modify('+1 min');
+        $dateTime->modify('+10 sec');
 
         //Сгенерувати нові показники об'єкту
         $amountOfRecords = 0;
@@ -56,7 +56,7 @@ class Emulator
 
             //Лічильник
             $amountOfRecords++;
-            $dateTime->modify('+1 min');
+            $dateTime->modify('+10 sec');
 
             $this->device->addRecord($record);
             $this->em->persist($record);
