@@ -109,7 +109,7 @@ function savePidRegulatorConfig() {
             //TODO
 	},
         error: function(response) {
-            alert('savePidRegulatorConfig: Сталася помилка, спробуйте пізніше!');
+            console.log('savePidRegulatorConfig: Сталася помилка, спробуйте пізніше!');
         }
     });
 }
@@ -127,12 +127,12 @@ function getPidChartData() {
     //Є зміни у полі "Завдання" - відсилаємо нове значення для запису у базу
     var pidConfig = {'Kp':$('#Kp').val(),'Ki':$('#Ki').val(),'Kd':$('#Kd').val()};
     $.ajax({
-	url: baseUrl+"/api/generatePidChart/"+$('#deviceId').val(),
+	url: baseUrl+"/api/generatePidChartsNew/",
 	type: "POST",
         data: pidConfig,
 	success: function (response) {
             var chartData = jQuery.parseJSON(response);
-            updatePidChart(chartData);
+            updatePidChart(chartData[0]);
 
             //Оновити кнопку
             oldKpForChart = parseFloat($('#Kp').val().trim());
@@ -142,22 +142,21 @@ function getPidChartData() {
         },
         error: function(response) {
             console.log(response);
-            alert('Сталася помилка, спробуйте пізніше!');
+            console.log('getPidChartData: Сталася помилка, спробуйте пізніше!');
         }
     });
 }
 
 function updatePidChart(chartData) {
-    var targetDataArray = new Array(
-        {
-            x: chartData[0]['x'],
-            y: 1
-        },
-        {
-            x: chartData[chartData.length-1]['x'],
-            y: 1
-        }
-    );
+    var targetDataArray = [];
+    var chartValues = [];
+    var counter = 0;
+    $.each(chartData, function(key, val){
+        counter++;
+        targetDataArray.push({x:counter, y:val["CO2-in-C2H2-y1-target"]});
+        chartValues.push({x:counter, y:val["CO2-in-C2H2-y1"]});
+    });
+
 
     if (!pidChartObject) {
         var domObject = document.getElementById("PidChart");
@@ -167,7 +166,7 @@ function updatePidChart(chartData) {
                 datasets: [
                     {
                         label: "Зміна витрати NaOH в залежності від часу",
-                        data: chartData,
+                        data: chartValues,
                         fill: true,
                         borderColor: "rgba(75,192,192,0.8)",
                         pointRadius: 1,
@@ -193,10 +192,10 @@ function updatePidChart(chartData) {
                         }],
                     yAxes: [{
                             display: true,
-                            ticks: {
+                            /*ticks: {
                                 suggestedMin: 0, // minimum will be 0, unless there is a lower value.
                                 suggestedMax: 1.5
-                            }
+                            }*/
                         }]
                 },
                 legend: {
@@ -206,7 +205,8 @@ function updatePidChart(chartData) {
             }
         });
     } else {
-        pidChartObject.data.datasets[0].data = chartData;
+        pidChartObject.data.datasets[0].data = chartValues;
+        pidChartObject.data.datasets[1].data = targetDataArray;
         pidChartObject.update();
     }
 }

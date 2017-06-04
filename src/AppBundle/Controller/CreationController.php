@@ -49,10 +49,12 @@ class CreationController extends Controller
             
             //Config (initial values for device parameters)
             $config = array(
-                'CO2-in-C2H2-y1-target'=>0.04,
-                'Kp'=>0.1,
-                'Ki'=>0.1,
-                'Kd'=>0.1,
+                'CO2-in-C2H2-y1-target'=>0.04, // <-- 
+                'Kp'=>0.01, // <-- 
+                'Ki'=>0.01, // <-- 
+                'Kd'=>0.01, // <-- 
+                'NaOH-Fr-Max' => 1500, // <-- Границя максимальної витрати NaOH
+                'NaOH-Fr-Min' => 0, // <-- Границя мінімальної витрати NaOH
             );
             
             $device->setConfig($config);

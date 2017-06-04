@@ -57,8 +57,8 @@ function saveCo2Config() {
             }
 	},
         error: function(response) {
+            console.log('saveCo2Config: Сталася помилка, спробуйте пізніше!');
             console.log(response);
-            alert('Сталася помилка, спробуйте пізніше!');
         }
     });
 }

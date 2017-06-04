@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Device;
 use AppBundle\Entity\Record;
+use AppBundle\Entity\Emulator;
+use AppBundle\Entity\PID;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,9 +42,14 @@ class DevicesController extends Controller
     public function showDeviceAction(Device $device)
     {
         $lastRecord = $device->getRecords()->first();
+        if (!$lastRecord) {
+            $lastRecordData = $device->getInitialValues();
+        } else {
+            $lastRecordData = $lastRecord->getData();
+        }
         $twigData = [
             'device' => $device,
-            'lastRecord' => $lastRecord,
+            'lastRecordData' => $lastRecordData,
             'page_title' => $device->getTitle()
         ];
         return $this->render('devices/show_device.twig', $twigData);

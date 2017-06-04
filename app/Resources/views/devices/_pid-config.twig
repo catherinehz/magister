@@ -8,26 +8,45 @@
                 <table class="table table-striped">
                     <tbody>
                         <tr>
+                            <th colspan="2">Регулюючі значення</td>
+                            <th>Збережені значення</td>
+                        </tr>
+                        <tr>
                             <td>Kp</td>
                             <td>
-                                <div class="input-group input-group-lg">
+                                <div class="pull-left">
                                     <input id="Kp" type="text" value="{{ device.getConfig['Kp'] }}" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pull-right">
+                                    <input disabled="disabled" value="{{ device.getConfig['Kp'] }}" style="width: 50px;text-align: center;" type="text">
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>Ki</td>
                             <td>
-                                <div class="input-group input-group-lg">
+                                <div class="pull-left">
                                     <input id="Ki" type="text" value="{{ device.getConfig['Ki'] }}" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pull-right">
+                                    <input disabled="disabled" value="{{ device.getConfig['Ki'] }}" style="width: 50px;text-align: center;" type="text">
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>Kd</td>
                             <td>
-                                <div class="input-group input-group-lg">
+                                <div class="pull-left">
                                     <input id="Kd" type="text" value="{{ device.getConfig['Kd'] }}" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pull-right">
+                                    <input disabled="disabled" value="{{ device.getConfig['Kd'] }}" style="width: 50px;text-align: center;" type="text">
                                 </div>
                             </td>
                         </tr>

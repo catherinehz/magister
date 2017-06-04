@@ -50,7 +50,7 @@ class ApiController extends Controller
                 'createdAt' => $record->getCreatedAt(),
             );
         }
-        
+
         //Create JSON response
         $response = array(
             'records' => $recordsArray,
@@ -69,7 +69,7 @@ class ApiController extends Controller
     {
         //Collect items to display
         $deviceConfigJson = $device->getConfigJson();
-        
+
         //Send OK response and DATA
         return new Response($deviceConfigJson);
     }
@@ -96,7 +96,7 @@ class ApiController extends Controller
     public function updateDeviceConfig(Device $device, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        
+
         //Чи треба записати нове завдання CO2-in-C2H2-y1
         $CO2inC2H2y1Target = $request->get('CO2-in-C2H2-y1-target');
         if ($CO2inC2H2y1Target) {
@@ -104,10 +104,10 @@ class ApiController extends Controller
             $deviceConfig = $device->getConfig(); //вертає массив з конфігураційними параметрами
             $deviceConfig['CO2-in-C2H2-y1-target'] = $CO2inC2H2y1Target;
             $device->setConfig($deviceConfig);
-            
+
             $em->persist($device); //Постанова на чергу для запису
         }
-        
+
         //Чи треба записати нове значення Kp
         $Kp = $request->get('Kp');
         if ($Kp) {
@@ -115,10 +115,10 @@ class ApiController extends Controller
             $deviceConfig = $device->getConfig(); //вертає массив з конфігураційними параметрами
             $deviceConfig['Kp'] = $Kp;
             $device->setConfig($deviceConfig);
-            
+
             $em->persist($device); //Постанова на чергу для запису
         }
-        
+
         //Чи треба записати нове значення Ki
         $Ki = $request->get('Ki');
         if ($Ki) {
@@ -126,10 +126,10 @@ class ApiController extends Controller
             $deviceConfig = $device->getConfig(); //вертає массив з конфігураційними параметрами
             $deviceConfig['Ki'] = $Ki;
             $device->setConfig($deviceConfig);
-            
+
             $em->persist($device); //Постанова на чергу для запису
         }
-        
+
         //Чи треба записати нове значення Kd
         $Kd = $request->get('Kd');
         if ($Kd) {
@@ -137,10 +137,10 @@ class ApiController extends Controller
             $deviceConfig = $device->getConfig(); //вертає массив з конфігураційними параметрами
             $deviceConfig['Kd'] = $Kd;
             $device->setConfig($deviceConfig);
-            
+
             $em->persist($device); //Постанова на чергу для запису
         }
-        
+
         $em->flush(); //Запис у базу даних
 
         //Send OK response and DATA
@@ -156,12 +156,52 @@ class ApiController extends Controller
         $Kp = (float)$request->get('Kp');
         $Ki = (float)$request->get('Ki');
         $Kd = (float)$request->get('Kd');
-        
+
         $pid = new PID($device);
         $chartData = $pid->generatePidChart($Kp, $Ki, $Kd);
-        
+
         //Send OK response and DATA
         return new Response($chartData, 200);
+    }
+
+    /**
+     * @Route("/api/generatePidChartsNew/", defaults={}, requirements={}, name="api_generate_pid_charts_new")
+     * @Method({"GET","POST"})
+     */
+    public function generatePidChartsNew(Request $request)
+    {
+        $Kp = (float)$request->get('Kp');
+        $Ki = (float)$request->get('Ki');
+        $Kd = (float)$request->get('Kd');
+
+        //Scenario 1 (drop)
+        $device = new Device();
+        $device->setConfig([
+            'CO2-in-C2H2-y1-target'=>0.02, // <-- 
+            'Kp'=>$Kp, // <-- 
+            'Ki'=>$Ki, // <-- 
+            'Kd'=>$Kd, // <-- 
+            'NaOH-Fr-Max' => 1500, // <-- Границя максимальної витрати NaOH
+            'NaOH-Fr-Min' => 0, // <-- Границя мінімальної витрати NaOH]
+        ]);
+        $record = new Record();
+        $record->setData([
+            'NaOH-Fr'=>690, // <-- Витрата NaOH
+            'CO2-in-C2H2-y0'=>0.06,
+            'CO2-in-C2H2-y1'=>0.06, // <-- Вихідн. конц. CO2 в суміші C2H2
+            'CO2-in-C2H2-y1-target'=>0.06,
+            'integralError' => 0, // <-- Інтегральна похибка для ПІД регулятора
+            'derivativeError' => 0, // <-- Диференційна похибка для ПІД регулятора
+            'NaOH-Fr-Max' => 1500, // <-- Границя максимальної витрати NaOH
+            'NaOH-Fr-Min' => 0, // <-- Границя мінімальної витрати NaOH
+        ]);
+        $device->addRecord($record);
+        $pid = new PID($device);
+        $chartsData[] = $pid->buildChartsNew($Kp, $Ki, $Kd);
+
+        $chartsData = json_encode($chartsData);
+        //Send OK response and DATA
+        return new Response($chartsData, 200);
     }
 
     /**
@@ -173,21 +213,21 @@ class ApiController extends Controller
         //Принять данные от объекта
         $dataArrayReceived = $request->get()->all();
         $dateTime = new \DateTime('now', new \DateTimeZone('Europe/Kiev'));
-        
+
         //Создать объект Records
         $record = new Record();
         $record->setDevice($device);
         $record->setData($dataArrayReceived);
         $record->setCreatedAt($dateTime);
-        
+
         //Записать объект в базу (табл. Records)
         $em = $this->getDoctrine()->getManager();
         $em->persist($record);
         $em->flush();
-        
+
         //Достать свежую конфигурацию объекта (из табл. Device: задание для СО2, коэф.: Kp, Ki, Kd)
         $deviceConfig = $device->getConfigJson();
-        
+
         //Отправить свежий $deviceConfig объекту управления
         return new Response($deviceConfig, 200);
     }
@@ -198,9 +238,11 @@ class ApiController extends Controller
      */
     public function emulateDeviceAction(Device $device)
     {
-        $emulator = new Emulator($device);
+
+        $em = $this->getDoctrine()->getManager();
+        $emulator = new Emulator($device, $em);
         $emulator->generateRecords();
-        
+
         return new Response("OK", 200);
     }
 }

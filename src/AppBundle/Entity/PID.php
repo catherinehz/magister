@@ -4,9 +4,8 @@ namespace AppBundle\Entity;
 
 class PID
 {
-
     /**
-     * @var Device
+     * @var Device object
      */
     private $device;
 
@@ -16,20 +15,20 @@ class PID
     private $deviceConfig;
 
     /**
-     * @var Record
+     * @var Array
      */
-    private $deviceLastRecord;
+    private $lastRecordData;
 
     /**
-     * @var Record
+     * @var Array
      */
-    private $devicePreviousRecord;
+    private $previousRecordData;
 
     /**
      * Час інтегрування
      * @var float
      */
-    private $_dt = 1.5;
+    private $_dt = 1.2;
 
     public function __construct(Device $device)
     {
@@ -37,12 +36,11 @@ class PID
 
         $this->deviceConfig = $device->getConfig();
 
-        $this->deviceLastRecord = $device->getRecords()->first();
+        $this->lastRecord = $device->getNewestRecord();
+        $this->lastRecordData = $this->lastRecord->getData();
 
-        $tmpVar = $device->getRecords()->slice(1,1);
-        if (count($tmpVar)) {
-            $this->devicePreviousRecord = $tmpVar[0];
-        }
+        //$this->previousRecordData = $device->getPreviousRecord()->getData();
+        $this->previousRecordData = $this->lastRecordData;
     }
 
     /* ------ Розрахунки ПІД-регулятора ------ */
@@ -55,7 +53,7 @@ class PID
     {
         //Вхідні параметри для розрахунків
         $targetCO2 = $this->deviceConfig['CO2-in-C2H2-y1-target']; //Завдання СО"
-        $currentCO2 = $this->deviceLastRecord['CO2-in-C2H2-y1']; //Поточне СО2
+        $currentCO2 = $this->lastRecordData['CO2-in-C2H2-y1']; //Поточне СО2
 
         //ПІД-коефіцієнти
         $Kp = $this->deviceConfig['Kp'];
@@ -63,41 +61,35 @@ class PID
         $Kd = $this->deviceConfig['Kd'];
 
         //Похибка
-        $error = $targetCO2 - $currentCO2;
+        $error = $currentCO2 - $targetCO2;
 
         // --- Пропорційна складова
         $pRegulator = $error * $Kp;
 
         // --- Інтегральна складова
-        $integralError = $this->deviceLastRecord['integralError'];
+        $integralError = $this->lastRecordData['integralError'];
         $currentIntegralError = ($integralError + ($error * $this->_dt));
         $iRegulator = $Ki * $currentIntegralError;
 
         // --- Диференційна складова
-        if ($this->devicePreviousRecord) {
-            $previousRecordData = $this->devicePreviousRecord->getData();
-            $previousDerivativeError = $previousRecordData['derivativeError'];
-        } else {
-            $previousDerivativeError = 0;
-        }
-        $currentDerivativeError = ($error - $previousDerivativeError) / $this->_dt;
+        $currentDerivativeError = ($error - $this->previousRecordData['derivativeError']) / $this->_dt;
         $dRegulator = $Kd * $currentDerivativeError;
 
         //Результуючий кофіцієнт ПІД-регулятора
         $pidResult = $pRegulator + $iRegulator + $dRegulator;
 
         //Витрата NaOH після застосування ПІД-регулятора
-        $pidNaOHFr = $this->deviceLastRecord['NaOH-Fr'] + ($pidResult*$this->deviceLastRecord['NaOH-Fr']);
+        $pidNaOHFr = $this->lastRecordData['NaOH-Fr'] + ($pidResult*$this->lastRecordData['NaOH-Fr']);
         if ($pidNaOHFr > $this->deviceConfig['NaOH-Fr-Max']) {
             $pidNaOHFr = $this->deviceConfig['NaOH-Fr-Max'];
             $currentIntegralError = $integralError;
-            $currentDerivativeError = $previousDerivativeError;
+            $currentDerivativeError = $this->previousRecordData['derivativeError'];
         } elseif($pidNaOHFr < $this->deviceConfig['NaOH-Fr-Min']) {
             $pidNaOHFr = $this->deviceConfig['NaOH-Fr-Min'];
             $currentIntegralError = $integralError;
-            $currentDerivativeError = $previousDerivativeError;
+            $currentDerivativeError = $this->previousRecordData['derivativeError'];
         }
-        
+
         $resultArray = [
             'NaOH-Fr' => $pidNaOHFr,
             'integralError' => $currentIntegralError,
@@ -117,16 +109,40 @@ class PID
      */
     public function generatePidChart($Kp, $Ki, $Kd)
     {
-        $deviceConfig = $this->device->getConfig();
-        if ($Kp === null) $Kp = $deviceConfig['Kp'];
-        if ($Ki === null) $Ki = $deviceConfig['Ki'];
-        if ($Kd === null) $Kd = $deviceConfig['Kd'];
+        if ($Kp === null) $Kp = $this->deviceConfig['Kp'];
+        if ($Ki === null) $Ki = $this->deviceConfig['Ki'];
+        if ($Kd === null) $Kd = $this->deviceConfig['Kd'];
 
         $chartData = $this->_buildPRegulatorChart($Kp, $Ki, $Kd);
 
         return json_encode($chartData);
     }
 
+    public function buildChartsNew($Kp, $Ki, $Kd, $limit = 1500) {
+        $records = [];
+        for ($i=0; $i<$limit; $i++) {
+            $newRecord = $this->lastRecordData;
+            $pidResult = $this->regulateNaOH();
+            
+            $newRecord['CO2-in-C2H2-y1-target'] = $this->deviceConfig['CO2-in-C2H2-y1-target'];
+            $newRecord['NaOH-Fr'] = $pidResult['NaOH-Fr'];
+            $newRecord['integralError'] = $pidResult['integralError'];
+            $newRecord['derivativeError'] = $pidResult['derivativeError'];
+
+            //Математична модель
+            //Емулюємо нове значення конц. СО2 на виході за допомогою мат. моделі
+            $newRecord['CO2-in-C2H2-y1'] = ScrubberModel::mathModelMock($newRecord['NaOH-Fr']);
+            
+            $records[] = $newRecord;
+            $this->lastRecordData = array_merge($this->lastRecordData, $newRecord);
+            $this->previousRecordData = $this->lastRecordData;
+            
+            if (abs($newRecord['integralError']) <= 0.0002 && abs($newRecord['derivativeError']) <= 0.0000002) break;
+        }
+        return $records;
+    }
+    
+    
     private function _buildPRegulatorChart($Kp, $Ki, $Kd, $inertia = 6, $limit = 499) {
         $results = [];
         $i = 0;
@@ -201,6 +217,21 @@ class PID
     private function _areWeStabilized($last10Points, $maxDeviation) {
         foreach ($last10Points as $value) {
             if (abs($value-1) > $maxDeviation) return false;
+        }
+
+        return true;
+    }
+
+    private function _areWeStabilizedNew($last10Points, $target, $maxDeviation) {
+        foreach ($last10Points as $value) {
+            if (($value >= 0 && $target >= 0) || ($value <= 0 && $target <= 0)) {
+                $deviation = abs(abs($value) - abs($target));
+            } elseif ($value < 0 && $target > 0) {
+                $deviation = abs($target - $value);
+            } else {
+                $deviation = abs($value - $target);
+            }
+            if ($deviation > $maxDeviation) return false;
         }
 
         return true;

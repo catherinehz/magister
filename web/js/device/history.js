@@ -2,13 +2,16 @@
 
 var updateDeviceInterval = null;
 $(document).ready(function(){
-    refreshDeviceStats();
-    updateDeviceInterval = setInterval(function(){ refreshDeviceStats() }, 10*1000); //кожні 30 секунд
+    //refreshDeviceStats();
+    //updateDeviceInterval = setInterval(function(){ refreshDeviceStats() }, 10*1000); //кожні 10 секунд
 });
 
 function refreshDeviceStats() {
+    var amount = ($('#amount').length && !isNaN(parseInt($('#amount').val().trim()))) ? parseInt($('#amount').val().trim()) : 100;
+    var page = ($('#page').length && !isNaN(parseInt($('#page').val().trim()))) ? parseInt($('#page').val().trim()) : 0;
+    
     $.ajax({
-	url: baseUrl+"/api/getDeviceRecords/"+$('#deviceId').val()+"/0/100",
+	url: baseUrl+"/api/getDeviceRecords/"+$('#deviceId').val()+"/"+page+"/"+amount,
 	type: "POST",
 	data: {},
 	success: function(response) {

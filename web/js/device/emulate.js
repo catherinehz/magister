@@ -1,6 +1,6 @@
 var emulationInterval = null;
 $(document).ready(function(){
-    emulationInterval = setInterval(function(){ emulateDevice() }, 10*1000); //every 60 seconds
+    //emulationInterval = setInterval(function(){ emulateDevice() }, 10*1000); //every 60 seconds
 });
 
 function emulateDevice() {
