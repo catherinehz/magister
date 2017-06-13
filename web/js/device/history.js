@@ -1,15 +1,15 @@
-//TODO: Відобразити завдання на графіку
-
 var updateDeviceInterval = null;
 $(document).ready(function(){
-    //refreshDeviceStats();
-    //updateDeviceInterval = setInterval(function(){ refreshDeviceStats() }, 10*1000); //кожні 10 секунд
+    refreshDeviceStats();
+    if (!devMode) {
+        updateDeviceInterval = setInterval(function(){ refreshDeviceStats() }, 2*1000); //кожні 2 секунд
+    }
 });
 
 function refreshDeviceStats() {
     var amount = ($('#amount').length && !isNaN(parseInt($('#amount').val().trim()))) ? parseInt($('#amount').val().trim()) : 100;
     var page = ($('#page').length && !isNaN(parseInt($('#page').val().trim()))) ? parseInt($('#page').val().trim()) : 0;
-    
+
     $.ajax({
 	url: baseUrl+"/api/getDeviceRecords/"+$('#deviceId').val()+"/"+page+"/"+amount,
 	type: "POST",
@@ -44,6 +44,7 @@ function drawChart(deviceData, recordDataKey, chartLabel) {
     var chartDataTargetArray = new Array();
     var chartMin = null;
     var chartMax = null;
+
     $.each(deviceData.records, function(key, record){
         //Факт. показники
         var xData = record.createdAt.date;
@@ -66,6 +67,7 @@ function drawChart(deviceData, recordDataKey, chartLabel) {
         if (chartMin > yData) chartMin = yData;
         if (chartMax < yData) chartMax = yData;
     });
+
     var chartDeviation = chartMax - chartMin;
     chartMax = chartMax + ((chartDeviation/100)*10);
     chartMin = chartMin - ((chartDeviation/100)*10);
@@ -147,7 +149,6 @@ function drawChart(deviceData, recordDataKey, chartLabel) {
             chartOptions
         );
     }
-    //Оновлення графіка
 }
 
 /* ------------------------- */

@@ -1,5 +1,3 @@
-//TODO: Відобразити завдання на графіку
-
 $(document).ready(function(){
     $('#savePidConfig').click(savePidRegulatorConfig);
     $('#updatePidChart').click(getPidChartData);

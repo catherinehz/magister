@@ -40,7 +40,26 @@ class Emulator
         $currentDateTime = new \DateTime('now', new \DateTimeZone('Europe/Kiev'));
         $dateTime = $this->deviceLastRecord->getCreatedAt();
         $dateTime->setTimezone(new \DateTimeZone('Europe/Kiev'));
-        $dateTime->modify('+10 sec');
+        
+        $diff = $dateTime->diff($currentDateTime);
+        $timeShiftInterval = '+10 sec';
+        if ($diff->s > 0) {
+            $timeShiftInterval = '+1 sec';
+        }
+        if ($diff->i > 0) {
+            $timeShiftInterval = '+10 sec';
+        }
+        if ($diff->h > 0) {
+            $timeShiftInterval = '+1 min';
+        }
+        if ($diff->d > 0) {
+            $timeShiftInterval = '+1 hour';
+        }
+        if ($diff->m > 0) {
+            $timeShiftInterval = '+10 hours';
+        }
+        
+        $dateTime->modify($timeShiftInterval);
 
         //Сгенерувати нові показники об'єкту
         $amountOfRecords = 0;
@@ -56,7 +75,7 @@ class Emulator
 
             //Лічильник
             $amountOfRecords++;
-            $dateTime->modify('+10 sec');
+            $dateTime->modify($timeShiftInterval);
 
             $this->device->addRecord($record);
             $this->em->persist($record);

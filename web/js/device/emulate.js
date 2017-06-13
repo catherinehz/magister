@@ -1,6 +1,8 @@
 var emulationInterval = null;
 $(document).ready(function(){
-    //emulationInterval = setInterval(function(){ emulateDevice() }, 10*1000); //every 60 seconds
+    if (!devMode) {
+        emulationInterval = setInterval(function(){ emulateDevice() }, 2*1000); //кожні 2 секунд
+    }
 });
 
 function emulateDevice() {
@@ -12,7 +14,7 @@ function emulateDevice() {
             //console.log('emulateDevice:',response);
 	},
         error: function(response) {
-            console.log('emulateDevice(): Сталася помилка, спробуйте пізніше!');
+            //console.log('emulateDevice(): Сталася помилка, спробуйте пізніше!');
         }
     });
 }
