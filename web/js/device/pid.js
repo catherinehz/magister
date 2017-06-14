@@ -98,6 +98,9 @@ function savePidRegulatorConfig() {
             oldKpForDB = parseFloat($('#Kp').val().trim());
             oldKiForDB = parseFloat($('#Ki').val().trim());
             oldKdForDB = parseFloat($('#Kd').val().trim());
+            $('#Kp_stored').val(oldKpForDB);
+            $('#Ki_stored').val(oldKiForDB);
+            $('#Kd_stored').val(oldKdForDB);
             updatePidButtonForDb();
 
             //Оновити графік
@@ -150,9 +153,20 @@ function updatePidChart(chartData) {
     var chartValues = [];
     var counter = 0;
     $.each(chartData, function(key, val){
+        //targetDataArray.push({x:counter, y:val["CO2-in-C2H2-y1-target"]});
+        targetDataArray.push({x:counter, y:1});
+        var v = val["CO2-in-C2H2-y1"];
+        var t = 0.055;
+        if (v < t) {
+            var res = v/t;
+        } else if (v > t) {
+            var res = v - t;
+            res = 1 + (res/t);
+        } else {
+            var res = 1;
+        }
+        chartValues.push({x:counter, y:res});
         counter++;
-        targetDataArray.push({x:counter, y:val["CO2-in-C2H2-y1-target"]});
-        chartValues.push({x:counter, y:val["CO2-in-C2H2-y1"]});
     });
 
 

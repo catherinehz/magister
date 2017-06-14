@@ -120,6 +120,7 @@ class PID
 
     public function buildChartsNew($Kp, $Ki, $Kd, $limit = 1500) {
         $records = [];
+        $records[] = $this->lastRecordData;
         for ($i=0; $i<$limit; $i++) {
             $newRecord = $this->lastRecordData;
             $pidResult = $this->regulateNaOH();
@@ -137,7 +138,7 @@ class PID
             $this->lastRecordData = array_merge($this->lastRecordData, $newRecord);
             $this->previousRecordData = $this->lastRecordData;
             
-            if (abs($newRecord['integralError']) <= 0.0002 && abs($newRecord['derivativeError']) <= 0.0000002) break;
+            if (abs($newRecord['integralError']) <= 0.0001 && abs($newRecord['derivativeError']) <= 0.0001) break;
         }
         return $records;
     }

@@ -27,9 +27,9 @@ function refreshDeviceStats() {
 
 function redrawDeviceNumbers(deviceData) {
     $('#C2H2-Fg').val(deviceData.records[0].data['C2H2-Fg']);
-    $('#NaOH-Fr').val(deviceData.records[0].data['NaOH-Fr']);
+    $('#NaOH-Fr').val(round(deviceData.records[0].data['NaOH-Fr'],2));
     $('#CO2-in-C2H2-y0').val(deviceData.records[0].data['CO2-in-C2H2-y0']);
-    $('#CO2-in-C2H2-y1').val(deviceData.records[0].data['CO2-in-C2H2-y1']);
+    $('#CO2-in-C2H2-y1').val(round(deviceData.records[0].data['CO2-in-C2H2-y1'],3));
     return true;
 }
 
@@ -111,7 +111,8 @@ function drawChart(deviceData, recordDataKey, chartLabel) {
                         type: 'time',
                         time: {
                             displayFormats: {
-                                minute: 'HH:mm'
+                                minute: 'HH:mm',
+                                hour: 'HH:mm'
                             }
                         }
                     }],
@@ -154,4 +155,8 @@ function drawChart(deviceData, recordDataKey, chartLabel) {
 /* ------------------------- */
 function stopUpdating() {
     clearInterval(updateDeviceInterval);
+}
+
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }

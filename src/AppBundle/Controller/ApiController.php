@@ -185,27 +185,30 @@ class ApiController extends Controller
         //Scenario 1 (drop)
         $device = new Device();
         $device->setConfig([
-            'CO2-in-C2H2-y1-target'=>0.02, // <-- 
+            'CO2-in-C2H2-y1-target'=>0.055, // <-- 
             'Kp'=>$Kp, // <-- 
             'Ki'=>$Ki, // <-- 
             'Kd'=>$Kd, // <-- 
             'NaOH-Fr-Max' => 1500, // <-- Границя максимальної витрати NaOH
             'NaOH-Fr-Min' => 0, // <-- Границя мінімальної витрати NaOH]
         ]);
+        
+        //'1113' => 0.00011
         $record = new Record();
         $record->setData([
-            'NaOH-Fr'=>690, // <-- Витрата NaOH
+            'NaOH-Fr'=>1113, // <-- Витрата NaOH
             'CO2-in-C2H2-y0'=>0.06,
-            'CO2-in-C2H2-y1'=>0.06, // <-- Вихідн. конц. CO2 в суміші C2H2
-            'CO2-in-C2H2-y1-target'=>0.06,
+            'CO2-in-C2H2-y1'=>0.00011, // <-- Вихідн. конц. CO2 в суміші C2H2
+            'CO2-in-C2H2-y1-target'=>0.055,
             'integralError' => 0, // <-- Інтегральна похибка для ПІД регулятора
             'derivativeError' => 0, // <-- Диференційна похибка для ПІД регулятора
             'NaOH-Fr-Max' => 1500, // <-- Границя максимальної витрати NaOH
             'NaOH-Fr-Min' => 0, // <-- Границя мінімальної витрати NaOH
         ]);
         $device->addRecord($record);
+        $device->addRecord(clone $record);
         $pid = new PID($device);
-        $chartsData[] = $pid->buildChartsNew($Kp, $Ki, $Kd);
+        $chartsData[] = $pid->buildChartsNew($Kp, $Ki, $Kd, 150);
 
         $chartsData = json_encode($chartsData);
         //Send OK response and DATA

@@ -205,7 +205,11 @@ public function mathModelNew($values = null) {
 
         if (!isset($arr[$index])) {
             if ($NaOH < 695) {
-                return 0.06;
+                //return 0.06;
+                $diff=695-$NaOH;
+                $res = 0.05975 + (0.001*$diff);
+                        
+                return $res;
             } else {
                 return 0;
             }
