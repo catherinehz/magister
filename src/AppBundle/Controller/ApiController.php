@@ -39,7 +39,15 @@ class ApiController extends Controller
         $recordsTotalCount = $device->getRecords()->count();
         $maxPage = ceil($recordsTotalCount/$recordsPerPage)-1;
         if ($page>$maxPage) $page = $maxPage;
-        $records = $device->getRecords()->slice($page*$recordsPerPage,$recordsPerPage);
+        
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:Record');
+        $records = $repository->findBy(
+            ['device' => $device->getId()],
+            ['createdAt' => 'DESC'],
+            $recordsPerPage,
+            $page*$recordsPerPage
+        );
 
         //Create array for JSON response
         $recordsArray = array();
